@@ -1,0 +1,28 @@
+# --- Orchestration Frameworks ---
+crewai>=0.100.0,<0.105.0
+crewai-tools>=0.30.0,<0.40.0
+autogen-agentchat>=0.4.0,<0.5.0
+autogen-core>=0.4.0,<0.5.0
+autogen-ext[ollama]>=0.4.0,<0.5.0
+
+# --- LangChain & Ollama Integration ---
+langchain>=0.3.0,<0.4.0
+langchain-core>=0.3.0,<0.4.0
+langchain-community>=0.3.0,<0.4.0
+langchain-ollama>=0.2.0,<0.3.0
+
+# --- Vector Retrieval & Embeddings ---
+chromadb>=0.5.0,<0.6.0
+sentence-transformers>=3.0.0,<4.0.0
+numpy>=1.26.0,<2.0.0
+
+# --- Backend API & WebSockets ---
+fastapi>=0.115.0,<0.116.0
+uvicorn[standard]>=0.30.0,<0.31.0
+websockets>=12.0,<13.0
+
+# --- Schemas & Environment ---
+pydantic>=2.8.0,<3.0.0
+python-dotenv>=1.0.0
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
