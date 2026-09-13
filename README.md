@@ -18,11 +18,11 @@ This repository implements a production-minded retail customer support system fo
 ### Zero-Network / Keyless Verification
 - All language-model operations run without external API keys or paid third-party endpoints.
 - **Mock Mode:** Default execution uses an internal, deterministic `MockLLM` subclass extending `crewai.llms.base_llm.BaseLLM`.
-- **Local Model Execution:** Validated using local **Ollama** (`qwen2.5:7b`) with `base_url="http://localhost:11434"`.
+- **Local Model Execution:** Validated using local **Ollama** (`qwen2.5:7b`) with `base_url"http://localhost:11434"`.
 - **Telemetry Suppression:** Telemetry is strictly suppressed across all execution pathways:
   ```bash
-  export CREWAI_DISABLE_TELEMETRY=true
-  export OTEL_SDK_DISABLED=true
+  export CREWAI_DISABLE_TELEMETRYtrue
+  export OTEL_SDK_DISABLEDtrue
 
 ---
 
@@ -43,23 +43,25 @@ Collection 'nykaa_kb_sentence': 47 chunks.
 [Sanity Check Query]: 'What is the return window for cosmetics?'
 Top Retrieved Chunk: Beauty, skincare, and cosmetic items must be returned within 5 days and remain sealed in their original protective packaging.
 
+---
 ## Run RAG Evaluation & Chunking Comparison
 python -m rag.evaluate_rag
-======================================================================
+
 FINAL CHUNKING STRATEGY COMPARISON & RECOMMENDATION
-======================================================================
-Fixed-Size Strategy:    Precision = 0.600 | Recall = 1.000
-Sentence-Based Strategy: Precision = 0.700 | Recall = 1.000
+
+Fixed-Size Strategy:    Precision  0.600 | Recall  1.000
+Sentence-Based Strategy: Precision  0.700 | Recall  1.000
 
 Recommendation:
 We recommend deploying the SENTENCE-BASED chunking strategy. Because policy documents are tightly phrased across 2 to5 distinct sentences, chunking strictly along grammatical boundaries preserves complete semantic clauses and achievessuperior retrieval precision (0.700 vs 0.600) while matching or exceeding recall (1.000). Fixed character splits introduce boundary fragmentation, occasionally severing conditional clauses from their qualifying rules.
 
+---
+
 ### Grounded generation, threshold calibration, and cache hits 
 python -m rag.grounded_engine
 
-===================================================================
 STEP 1: EMPIRICAL THRESHOLD CALIBRATION (Part 1 Task 4)
-===================================================================
+
 
 --- Calibrating Grounded Retrieval Similarity Threshold ---
   [In-Scope] 'What is the return window for cosmetics ...' -> Top-1 Sim: 0.6119
@@ -73,9 +75,9 @@ Calibration Results:
   Max Out-of-Scope Similarity:  0.2739
   Chosen Threshold (Midpoint):  0.4430
 
-===================================================================
-STEP 2: DEMONSTRATING GROUNDED GENERATION (>= 5 In-Scope + 1 Out-of-Scope)
-===================================================================
+
+STEP 2: DEMONSTRATING GROUNDED GENERATION (> 5 In-Scope + 1 Out-of-Scope)
+
 
 [In-Scope 1] Query: What is the return window for apparel and footwear?
   Similarity: 0.5786 (Threshold: 0.443)
@@ -107,9 +109,9 @@ STEP 2: DEMONSTRATING GROUNDED GENERATION (>= 5 In-Scope + 1 Out-of-Scope)
   Grounded:   False
   Answer:     I do not have sufficient policy information in our knowledge base to answer this question accurately.
 
-===================================================================
+
 STEP 3: RESPONSE CACHE HIT / MISS DEMONSTRATION (Part 4 Task 16)
-===================================================================
+
 [Call 1 - Cache Miss]
   From Cache: False | Latency: 46.641 ms | LLM Calls: 7
 [Call 2 - Cache Hit (Identical Query)]
@@ -117,14 +119,15 @@ STEP 3: RESPONSE CACHE HIT / MISS DEMONSTRATION (Part 4 Task 16)
 [Call 3 - Cache Hit (Normalized Query Variant)]
   From Cache: True | Latency: 0.013 ms | LLM Calls: 7
 
-Cache Stats: Hits=2, Misses=1, Redundant Calls Avoided=2
+Cache Stats: Hits2, Misses1, Redundant Calls Avoided2
 
+---
 ### Multi-turn memory transcript vs. clean session isolation
 python -m crew.memory
 
-==================================================
+
 DEMONSTRATION 1: Multi-Turn Conversation (Session A)
-==================================================
+
 [Turn 1] Query: What is the return policy for Apparel?
 [Turn 1] Response: Apparel items can be returned within 15 days of delivery with original tags intact.
 [Turn 2] Retrieved In-Memory Context:
@@ -135,12 +138,13 @@ Support Agent: Apparel items can be returned within 15 days of delivery with ori
 [Turn 2] Query: And how about Beauty products?
 [Turn 2] Response: Beauty products must be returned within 5 days and must remain sealed in protective packaging.
 
-==================================================
+
 DEMONSTRATION 2: Fresh Conversation (Session B)
-==================================================
+
 [Fresh Session Initial State] Stored History Length: 0
 [Fresh Session In-Memory Context Output]: '' (Confirmed Empty)
 
+---
 ### Principle of Least Autonomy RBAC verification 
 python -m governance.least_autonomy
 --- Demonstrating Principle of Least Autonomy (Part 4 Task 15) ---
@@ -153,6 +157,7 @@ Tool Bindings: {'Policy Retrieval Specialist': ['rag_lookup'], 'Order Status Aud
 Result: Successfully Intercepted and Blocked
 Caught Security Exception: Governance Breach [Application Layer]: Agent 'Policy Retrieval Specialist' is not authorized to bind or execute tool 'check_order_status'. Allowed tools for this role: ['rag_lookup'].
 
+---
 ### Token and capacity budget limit verification
 python -m governance.budget_guard
 
@@ -167,11 +172,12 @@ Oversized Query Length: 1702 chars, 371 words
 Result: Successfully Blocked by Governance Guardrail
 Caught Exception: Governance Budget Rejection: Request length (1702 chars) exceeds the per-request safety limit of 1200 characters.
 
+---
 ### Run the Verification
-===================================================================
+
 DEMONSTRATING AUTOGEN 2-AGENT REVIEW STAGE (Part 4 Task 14)
 AutoGen v0.4 Module Available: True
-===================================================================
+
 
 [Test 1: Compliant Policy Answer with Exposed PII]
   Input Draft: "Customer at +91-9876543210 can return cosmetic items within 5 days if sealed."
@@ -193,6 +199,7 @@ AutoGen v0.4 Module Available: True
 
 AutoGen 2-Agent Verification Completed Successfully.
 
+---
 ### run application
 uvicorn api.app:app --host 0.0.0.0 --port 8000 --reload
 
