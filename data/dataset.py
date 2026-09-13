@@ -1,8 +1,15 @@
+"""
+data/dataset.py
+Deterministic synthetic order dataset generator for Nykaa support agent.
+Satisfies Part 1 Task 1.
+"""
+
 import random
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 CATEGORIES = ["Apparel", "Electronics", "Home", "Footwear", "Beauty"]
 STATUSES = ["Placed", "Shipped", "Delivered", "Returned", "Refunded"]
+
 
 def generate_orders(seed: int = 42, count: int = 45) -> List[Dict[str, Any]]:
     """
@@ -40,9 +47,10 @@ def generate_orders(seed: int = 42, count: int = 45) -> List[Dict[str, Any]]:
 
     for idx, stub in enumerate(orders):
         category = stub.get("category", random.choice(CATEGORIES))
-        status = stub.get("status", random.choices(
-            STATUSES, weights=[0.25, 0.30, 0.25, 0.10, 0.10]
-        )[0])
+        status = stub.get(
+            "status",
+            random.choices(STATUSES, weights=[0.25, 0.30, 0.25, 0.10, 0.10])[0],
+        )
         p_min, p_max = price_ranges[category]
         order_val = random.randint(p_min // 50, p_max // 50) * 50
         days = random.randint(0, 30)
@@ -52,14 +60,16 @@ def generate_orders(seed: int = 42, count: int = 45) -> List[Dict[str, Any]]:
         if is_delayed:
             delayed_count += 1
 
-        final_orders.append({
+        record = {
             "record_id": f"NYK-{1000 + idx}",
             "category": category,
+            "product_category": category,  # Alias for compatibility across tools
             "status": status,
             "order_value_inr": order_val,
             "days_since_created": days,
             "delayed_shipment": is_delayed,
-        })
+        }
+        final_orders.append(record)
 
     # Validation assertions
     cat_counts = {c: sum(1 for o in final_orders if o["category"] == c) for c in CATEGORIES}
@@ -72,8 +82,23 @@ def generate_orders(seed: int = 42, count: int = 45) -> List[Dict[str, Any]]:
 
     return final_orders
 
-ORDERS = generate_orders()
+
+# Generate primary dataset
+ORDERS = generate_orders(seed=42, count=45)
+ORDERS_DATASET = ORDERS
+
+# Map for O(1) order lookup
+ORDERS_BY_ID: Dict[str, Dict[str, Any]] = {
+    o["record_id"].upper(): o for o in ORDERS
+}
+
+
+def get_order_by_id(record_id: str) -> Optional[Dict[str, Any]]:
+    """Retrieves an order record by ID (e.g. 'NYK-1002'), case-insensitive."""
+    return ORDERS_BY_ID.get(record_id.strip().upper())
+
 
 if __name__ == "__main__":
     print(f"Generated {len(ORDERS)} orders.")
     print(f"Delay Ratio: {sum(1 for o in ORDERS if o['delayed_shipment']) / len(ORDERS):.1%}")
+    print("Sample record (NYK-1004):", get_order_by_id("NYK-1004"))

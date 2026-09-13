@@ -1,0 +1,50 @@
+# Environment variables & secrets (CRITICAL)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python cache and byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local vector stores & cache (Chroma, FAISS, sqlite)
+chroma_db/
+chromadb/
+*.sqlite3
+*.db
+.cache/
+
+# Model weights & large binaries (Ollama/HuggingFace checkpoints)
+*.bin
+*.pt
+*.pth
+*.onnx
+*.safetensors
+models/
+
+# OS / Editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
