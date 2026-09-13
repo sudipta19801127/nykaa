@@ -125,15 +125,16 @@ Cache Stats: Hits2, Misses1, Redundant Calls Avoided2
 ### Multi-turn memory transcript vs. clean session isolation
 python -m crew.memory
 
-
 DEMONSTRATION 1: Multi-Turn Conversation (Session A)
 
-[Turn 1] Query: What is the return policy for Apparel?
-[Turn 1] Response: Apparel items can be returned within 15 days of delivery with original tags intact.
-[Turn 2] Retrieved In-Memory Context:
-Conversation Context (Previous Turns) 
+[Turn 1] Query: What is the return policy for Apparel?  
+[Turn 1] Response: Apparel items can be returned within 15 days of delivery with original tags intact.  
+[Turn 2] Retrieved In-Memory Context:  
+Conversation Context (Previous Turns)  
 Customer: What is the return policy for Apparel?
 Support Agent: Apparel items can be returned within 15 days of delivery with original tags intact.
+
+
 ---
 [Turn 2] Query: And how about Beauty products?
 [Turn 2] Response: Beauty products must be returned within 5 days and must remain sealed in protective packaging.
