@@ -126,7 +126,7 @@ Cache Stats: Hits2, Misses1, Redundant Calls Avoided2
 python -m crew.memory
 
 
-DEMONSTRATION 1: Multi-Turn Conversation (Session A)
+**DEMONSTRATION 1: Multi-Turn Conversation (Session A)**
 
 [Turn 1] Query: What is the return policy for Apparel?
 [Turn 1] Response: Apparel items can be returned within 15 days of delivery with original tags intact.
